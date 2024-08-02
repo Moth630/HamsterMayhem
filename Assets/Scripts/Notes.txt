@@ -1,0 +1,1 @@
+How should base states be defined for hamsters and etc
