@@ -1,1 +1,21 @@
 How should base states be defined for hamsters and etc
+Game states
+
+Enemy states
+-enterstate for start -isAngry False, -isDistracted False
+-updatestate
+-exitstate for transitions
+
+--alive class
+--angry class?
+--exit state
+
+States for environments that can be messed with
+
+
+with wanderingAI.Wander();
+-
+
+
+Boosting with pickups:
+Learn unity's Invoke function to skip some coroutines?
