@@ -4,5 +4,23 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/startingUI/StartScreen.unity
+    guid: 160a70297e5894a59b738bd66b9deef8
+  - enabled: 1
+    path: Assets/Scenes/startingUI/Instruction.unity
+    guid: 7e50a9923c4d74ff082b6cce1295ffd8
+  - enabled: 1
+    path: Assets/Scenes/gameplay/InCage.unity
+    guid: a47cba9cbbb034b42ba58512f7c5e641
+  - enabled: 1
+    path: Assets/Scenes/gameplay/FirstRoom.unity
+    guid: e83cae1345d4d4d308cab42275eeca80
+  - enabled: 1
+    path: Assets/Scenes/startingUI/GameOver.unity
+    guid: 2abd0f72b252d43fbb4acd54fc0f16b5
+  - enabled: 1
+    path: Assets/Scenes/startingUI/HighScore.unity
+    guid: 89d95a1f2d7a24ae7827723ba98ced15
   m_configObjects: {}
