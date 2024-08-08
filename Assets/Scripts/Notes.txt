@@ -10,6 +10,7 @@ Enemy states
 --angry class?
 --exit state
 
+create tags for: interactable environment, collectibles, food
 States for environments that can be messed with
 
 
@@ -19,3 +20,8 @@ with wanderingAI.Wander();
 
 Boosting with pickups:
 Learn unity's Invoke function to skip some coroutines?
+
+
+
+story:
+talking robot mouse toy
