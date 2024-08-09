@@ -25,3 +25,6 @@ Learn unity's Invoke function to skip some coroutines?
 
 story:
 talking robot mouse toy
+
+boss battle:
+push balls into a vacuum cleaner, set to reverse and shoot out and hit big robot

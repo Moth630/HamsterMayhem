@@ -20,9 +20,13 @@ public class PlayerScript : MonoBehaviour
     }
     public void MoreTreats()
     {
-      if(treats < 3)
+      if(_treats < 3)
       {
         _treats++;
+      }
+      else
+      {
+        Debug.Log("Too many treats!");
       }
     }
 }

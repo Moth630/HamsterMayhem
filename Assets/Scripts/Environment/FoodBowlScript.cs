@@ -12,7 +12,6 @@ public class FoodBowlScript : InteractableBaseClass
   bool interactable;
   [SerializeField] bool _StarterArea; //if starter area, will keep refilling
   [SerializeField] int _treats = 5;
-  public GameObject contact;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +43,7 @@ public class FoodBowlScript : InteractableBaseClass
     public override void Interacted() //if player's food count not at max, add one
     {
       //change based on Collider // only called when interactable is true, so no need to check?
-      
+
       _treats--;
       if(_StarterArea)
         _treats++;
