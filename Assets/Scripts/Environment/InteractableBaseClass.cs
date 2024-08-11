@@ -56,13 +56,17 @@ public virtual void OnTriggerEnter(Collider other)
 {
   if(other.gameObject.tag == "Player")
   {
+    Debug.Log("player found");
     _interactable = true;
     _playerScript = other.GetComponent<PlayerScript>();
-    if (_playerScript = null)
+    if (_playerScript != null)
     {
-      Debug.Log("Failed to get playerScript");
+      Debug.Log("playerscript is found");
     }
-    Debug.Log("interacting!");
+    else
+    {
+      Debug.Log("Playerscript not found");
+    }
   }
 }
 public virtual IEnumerator PopUpFaceCamera()
@@ -84,11 +88,11 @@ public virtual IEnumerator PopUpFaceCamera()
 }
 
 public virtual void OnTriggerExit(Collider other)
-{
-  if(other.gameObject.tag == "Player")
   {
-    _interactable = false;
-    DePopUp();
+    if(other.gameObject.tag == "Player")
+    {
+      _interactable = false;
+      DePopUp();
+    }
   }
-}
 }

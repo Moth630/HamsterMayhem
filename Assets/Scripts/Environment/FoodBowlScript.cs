@@ -50,30 +50,30 @@ public class FoodBowlScript : InteractableBaseClass
         if(Input.GetKeyUp(KeyCode.E))
         {
           Interacted();
+          Debug.Log("interacteded!");
         }
       }
     }
     public override void PopUp()
     {
-      Debug.Log("PopUp start!");
+      //Debug.Log("PopUp start!"); //this gets called every update, is that bad?
       if(_popupText != null && !_empty)
-      {
-        _popupText.text = "press E to use!\n"+ _treats +" left";
-        _popupText.gameObject.SetActive(true);
-        StartCoroutine(PopUpFaceCamera());
+        {
+          _popupText.text = "press E to use!\n"+ _treats +" left";
+          _popupText.gameObject.SetActive(true);
+          StartCoroutine(PopUpFaceCamera());
+        }
+        else
+        {
+        if(_popupText = null)
+        {
+          Debug.Log("bigger problems");
+        }
+        else
+        {
+          Debug.Log("gg");
+        }
       }
-      else {
-      if(_popupText = null)
-      {
-        Debug.Log("bigger problems");
-      }
-      else
-      {
-        Debug.Log("gg");
-      }
-    }
-      //code here to do canvas? TMPro around object that's always facing player with stylized letter
-      //"press e!" "do this!"
     }
     public override void IsInteracting() //no need
     {
@@ -84,6 +84,7 @@ public class FoodBowlScript : InteractableBaseClass
       //change based on Collider // only called when interactable is true, so no need to check?
       if(_playerScript != null && _playerScript.ReturnTreats() <3)
       {
+        Debug.Log("playerscript found");
         _playerScript.MoreTreats();
         _treats--;
       }

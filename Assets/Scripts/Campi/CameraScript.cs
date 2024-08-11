@@ -28,11 +28,7 @@ public class CameraScript : MonoBehaviour
       float horInput = Input.GetAxis("Horizontal");
 
       // Rotate based on the keyboard if pressed
-      if (!Mathf.Approximately(horInput, 0))
-          // Slowly rotate camera with arrow keys
-          _rotY += horInput * _rotSpeed;
-      // Otherwise, use the mouse X axis
-      else
+
           _rotY += Input.GetAxis("Mouse X") * _rotSpeed * 3;
 
       // Maintain starting offset, shifted according to the

@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CollectiblesBaseClass : MonoBehaviour
+public abstract class CollectiblesBaseClass : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+  public GameObject _prefab;
+  public string _name;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  public virtual string Name()
+  {
+    if(_name != null)
+      return _name;
+    else
+      return null;
+  }
+  public virtual void Throw(float _strength, Vector3 position, Quaternion rotation)
+  {
+    Debug.Log("");
+  }
+//  public virtual void Gravity()
+//  {
+//    transform.
+//  }
 }
