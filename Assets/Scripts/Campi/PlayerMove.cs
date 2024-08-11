@@ -10,6 +10,8 @@ public class PlayerMove : MonoBehaviour
   [SerializeField] Transform _target;
 
   [SerializeField] float _moveSpeed = 6.0f;
+  [SerializeField] float _runTime = 10.0f;
+  private float _currSpeed;
   [SerializeField] float _rotSpeed = 15.0f;
 
   [SerializeField] float _jumpSpeed = 15.0f;
@@ -28,6 +30,7 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+      _currSpeed = _moveSpeed;
       _vertSpeed = _minFall;
       _charController = GetComponent<CharacterController>();
       _charController.radius = 8f;
@@ -49,8 +52,8 @@ public class PlayerMove : MonoBehaviour
         Vector3 right = _target.right;
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         movement = (right * horInput) + (forward * vertInput);
-        movement *= _moveSpeed;
-        movement = Vector3.ClampMagnitude(movement, _moveSpeed);
+        movement *= _currSpeed;
+        movement = Vector3.ClampMagnitude(movement, _currSpeed);
         Quaternion direction = Quaternion.LookRotation(movement);
         transform.rotation = Quaternion.Lerp(
             transform.rotation, direction, _rotSpeed * Time.deltaTime);
@@ -97,10 +100,10 @@ public class PlayerMove : MonoBehaviour
        {
          if (Vector3.Dot(movement, _contact.normal) < 0)
          {
-         movement = _contact.normal * _moveSpeed;
+         movement = _contact.normal * _currSpeed;
         }
         else{
-          movement += _contact.normal * _moveSpeed;
+          movement += _contact.normal * _currSpeed;
           }
         }
       }
@@ -111,5 +114,17 @@ public class PlayerMove : MonoBehaviour
   private void OnControllerColliderHit(ControllerColliderHit hit)
   {
       _contact = hit;
+  }
+
+  public void SpeedBoost()
+  {
+    StartCoroutine(Boosting());
+  }
+
+  public IEnumerator Boosting()
+  {
+    _currSpeed = _moveSpeed * 2;
+    yield return new WaitForSeconds(_runTime);
+    _currSpeed = _moveSpeed;
   }
 }

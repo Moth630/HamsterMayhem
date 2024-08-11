@@ -45,8 +45,11 @@ public class FoodBowlScript : InteractableBaseClass
     {
       if(_interactable) //if in distance based on collider of sphere
       {
-        Debug.Log("interactable is " + _interactable);
-        PopUp(); //show pop up
+        if(!_poppedUp)
+        {
+          Debug.Log("interactable is " + _interactable);
+          PopUp(); //show pop up
+        }
         if(Input.GetKeyUp(KeyCode.E))
         {
           Interacted();
@@ -56,10 +59,10 @@ public class FoodBowlScript : InteractableBaseClass
     }
     public override void PopUp()
     {
-      //Debug.Log("PopUp start!"); //this gets called every update, is that bad?
+      Debug.Log("PopUp start!"); //this gets called every update, is that bad?
       if(_popupText != null && !_empty)
         {
-          _popupText.text = "press E to use!\n"+ _treats +" left";
+          _poppedUp=true;
           _popupText.gameObject.SetActive(true);
           StartCoroutine(PopUpFaceCamera());
         }
@@ -75,10 +78,31 @@ public class FoodBowlScript : InteractableBaseClass
         }
       }
     }
+    public override IEnumerator PopUpFaceCamera()
+    {
+      while(_interactable)
+      {
+        _popupText.text = "press E to use!\n"+ _treats +" left";
+        if (mainCamera != null)
+       {
+           // Make the text face the camera
+           _popupDisplay.transform.LookAt(mainCamera.transform);
+           _popupText.transform.LookAt(_popupText.transform.position + mainCamera.transform.forward);
+       }
+       else
+       {
+         Debug.Log("camera not captured");
+       }
+       yield return 0.1f;
+      }
+      yield return null;
+    }
+
     public override void IsInteracting() //no need
     {
       Debug.Log("");
     }
+
     public override void Interacted() //if player's food count not at max, add one
     {
       //change based on Collider // only called when interactable is true, so no need to check?

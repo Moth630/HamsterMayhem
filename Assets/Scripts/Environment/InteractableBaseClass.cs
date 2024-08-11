@@ -9,6 +9,7 @@ public abstract class InteractableBaseClass : MonoBehaviour
 
 //public float _interactionDistance = 5f; //dont need, instead of calculating distance, just make a sphere collider
 public bool _interactable;
+public bool _poppedUp;
 public Canvas _popupDisplay;
 public TextMeshProUGUI _popupText;
 public Camera mainCamera;
@@ -24,6 +25,7 @@ public virtual void PopUp()
     if(_popupText!= null)
     {
       _popupText.gameObject.SetActive(true);
+      _poppedUp = true;
       StartCoroutine(PopUpFaceCamera());
     }
   }
@@ -34,8 +36,10 @@ public virtual void DePopUp()
   if(_popupText!= null)
   {
     _popupText.gameObject.SetActive(false);
+    _poppedUp = false;
   }
 }
+
 //method for see if able to start interaction because player close
 /*public virtual void AbleInteract(float _distanceNeeded, Vector3 _playerTransform)
 {
@@ -44,14 +48,18 @@ public virtual void DePopUp()
 //method for starting interaction
 //just switch this for Update() with a bool for ready to interact
 //method for while interacting? in update, if interacting is true do this
+
 public virtual void IsInteracting()
 {
   Debug.Log("Interactioning!");
 }
+
 public abstract void Interacted(); //finished interacting
 //method for not interactable anymore for things that can be broken/runout
+
 public abstract void Broken();
 //method for transitioning between
+
 public virtual void OnTriggerEnter(Collider other)
 {
   if(other.gameObject.tag == "Player")

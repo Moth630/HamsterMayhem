@@ -10,20 +10,25 @@ public class PlayerScript : MonoBehaviour
   [SerializeField] TextMeshProUGUI _numTreats;
   [SerializeField] TextMeshProUGUI _numToys;
   [SerializeField] GameObject _throw;
-  [SerializeField] float _MaxTimeForThrow = 3f;
+  [SerializeField] GameObject _eat;
+  [SerializeField] PlayerMove _moveScript;
   public int _treats;
   public int _toys;
   private List<CollectiblesBaseClass> _pickups = new List<CollectiblesBaseClass>();
   //keep list of toys picked up and spit them out in opposite order
   //max num of toys is 3
-
-  private bool _isButtonHeld = false;
+  private bool _isFire1ButtonHeld = false;
   private float _buttonHoldTime=0f;
-  private float _throwStrength= 0f;
+  private Slider _slider;
 
+  //for eating and speeding
+  private bool _isFire2ButtonHeld = false;
+  private float _eatButtonHoldTime =0f;
+  private Slider _eatSlider;
     // Start is called before the first frame update
     void Start()
     {
+      _moveScript = GetComponent<PlayerMove>();
       _stats = GameObject.Find("StatsScreen").GetComponent<Canvas>();
       _numTreats =
         _stats.transform.Find("Food").GetComponent<TextMeshProUGUI>();
@@ -33,40 +38,96 @@ public class PlayerScript : MonoBehaviour
       _throw =
         _stats.transform.Find("ToyThrow").gameObject;
         _throw.SetActive(false);
-
-
+        _slider = _throw.transform.GetComponent<Slider>();
+      _eat =
+        _stats.transform.Find("Eating").gameObject;
+        _eat.SetActive(false);
+        _eatSlider = _eat.transform.GetComponent<Slider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-      if(Input.GetKeyDown(KeyCode.Q))
+      if(_toys >0)
+        ActionThrow();
+      if(_treats >0)
+        ActionEat();
+    }
+
+    public void ActionEat()
+    {
+      if(Input.GetButtonDown("Fire2"))
       {
-        if(!_isButtonHeld)
+        if(!_isFire2ButtonHeld)
         {
-          _isButtonHeld = true;
+          _isFire2ButtonHeld = true;
+          _eatButtonHoldTime = 0f;
+          _eat.SetActive(true);
+          StartCoroutine(EatingFood());
+        }
+        if(_eatButtonHoldTime < 4f)
+        {
+          _eatButtonHoldTime += Time.deltaTime;
+          Debug.Log("time is " + _eatButtonHoldTime);
+        }
+      }
+      if(Input.GetButtonUp("Fire1"))
+      {
+        _isFire1ButtonHeld =false;
+        _eat.SetActive(false);
+      }
+    }
+
+    public IEnumerator EatingFood()
+    {
+      while(_isFire2ButtonHeld)
+      {
+        _eatButtonHoldTime += Time.deltaTime;
+        _eatSlider.value = Mathf.Clamp(_eatButtonHoldTime,0f,4f);
+        for (int aib=0; aib <7; aib++)
+        {
+          yield return null;
+        }
+      }
+      _moveScript.SpeedBoost();
+    }
+
+
+    public IEnumerator ThrowingToys()
+    {
+      while(_isFire1ButtonHeld)
+      {
+        _buttonHoldTime += Time.deltaTime;
+        _slider.value =Mathf.Clamp(_buttonHoldTime,0f,3f);
+        for (int i = 0; i <5; i++)
+        {
+          yield return null;
+        }
+      }
+    }
+
+    public void ActionThrow()
+    {
+      if(Input.GetButtonDown("Fire1"))
+      {
+        if(!_isFire1ButtonHeld)
+        {
+          _isFire1ButtonHeld = true;
           _buttonHoldTime = 0f;
-          _throwStrength = 0f;
           _throw.SetActive(true);
           StartCoroutine(ThrowingToys());
         }
+        if(_buttonHoldTime < 3f)
+        {
+          _buttonHoldTime += Time.deltaTime;
+          Debug.Log("time is " + _buttonHoldTime);
+        }
       }
-      if(Input.GetKeyUp(KeyCode.Q))
+      if(Input.GetButtonUp("Fire1"))
       {
-        _isButtonHeld =false;
+        _isFire1ButtonHeld =false;
         _throw.SetActive(false);
       }
-    }
-    public IEnumerator ThrowingToys()
-    {
-      Slider _slider = _throw.transform.GetComponent<Slider>();
-      while(_isButtonHeld)
-      {
-        _buttonHoldTime += Time.deltaTime;
-        _throwStrength = Mathf.Clamp(_buttonHoldTime,0f,3f);
-        _slider.value = _throwStrength;
-      }
-      yield return null;
     }
 
     public void OnTriggerEnter(Collider other)
