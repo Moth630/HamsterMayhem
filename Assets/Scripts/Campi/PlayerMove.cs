@@ -33,12 +33,13 @@ public class PlayerMove : MonoBehaviour
       _charController.radius = 8f;
       _groundCheckDistance =
           (_charController.height + _charController.radius) /
-          _charController.height * 0.9f;
+          _charController.height * 1.1f;
     }
 
     // Update is called once per frame
     void Update()
     {
+
       Vector3 movement = Vector3.zero;
 
       float horInput = Input.GetAxis("Horizontal");
@@ -60,16 +61,27 @@ public class PlayerMove : MonoBehaviour
                               transform.position,
                               Vector3.down,
                               out RaycastHit hit))
+                              {
         hitGround = hit.distance <= _groundCheckDistance;
-
-    if (hitGround)
+  //      Debug.Log("hitground is " + hitGround);
+  //      Debug.Log("hit distance is " + hit.distance + ", ground check is " + _groundCheckDistance);
+      }
+    if (hitGround){
         if (Input.GetButtonDown("Jump"))
+        {
             _vertSpeed = _jumpSpeed;
+  //          Debug.Log("jumping");
+  //          Debug.Log("groundcheck is " + _groundCheckDistance);
+          }
         else
         {
             _vertSpeed = _minFall;
+  //          Debug.Log("falling");
+  //          Debug.Log("groundcheck is " + _groundCheckDistance);
+
     //        _animator.SetBool("Jumping", false);
         }
+      }
 
     else
     {
