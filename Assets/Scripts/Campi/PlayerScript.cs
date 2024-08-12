@@ -12,6 +12,8 @@ public class PlayerScript : MonoBehaviour
   [SerializeField] GameObject _throw;
   [SerializeField] GameObject _eat;
   [SerializeField] PlayerMove _moveScript;
+  [SerializeField] float _eatDuration = 4f;
+  [SerializeField] float _throwDuration = 3f;
   public int _treats;
   public int _toys;
   private List<CollectiblesBaseClass> _pickups = new List<CollectiblesBaseClass>();
@@ -25,6 +27,7 @@ public class PlayerScript : MonoBehaviour
   private bool _isFire2ButtonHeld = false;
   private float _eatButtonHoldTime =0f;
   private Slider _eatSlider;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,10 +42,12 @@ public class PlayerScript : MonoBehaviour
         _stats.transform.Find("ToyThrow").gameObject;
         _throw.SetActive(false);
         _slider = _throw.transform.GetComponent<Slider>();
+        _slider.maxValue = _throwDuration;
       _eat =
         _stats.transform.Find("Eating").gameObject;
         _eat.SetActive(false);
         _eatSlider = _eat.transform.GetComponent<Slider>();
+        _eatSlider.maxValue = _eatDuration;
     }
 
     // Update is called once per frame
@@ -65,31 +70,40 @@ public class PlayerScript : MonoBehaviour
           _eat.SetActive(true);
           StartCoroutine(EatingFood());
         }
-        if(_eatButtonHoldTime < 4f)
+        if(_eatButtonHoldTime < _eatDuration)
         {
           _eatButtonHoldTime += Time.deltaTime;
-          Debug.Log("time is " + _eatButtonHoldTime);
+          Debug.Log("eat time is " + _eatButtonHoldTime);
         }
       }
-      if(Input.GetButtonUp("Fire1"))
+      if(Input.GetButtonUp("Fire2"))
       {
-        _isFire1ButtonHeld =false;
+        _isFire2ButtonHeld =false;
         _eat.SetActive(false);
       }
     }
 
     public IEnumerator EatingFood()
     {
+      float abcd = 0f;
       while(_isFire2ButtonHeld)
       {
         _eatButtonHoldTime += Time.deltaTime;
-        _eatSlider.value = Mathf.Clamp(_eatButtonHoldTime,0f,4f);
-        for (int aib=0; aib <7; aib++)
-        {
+        _eatSlider.value = Mathf.Clamp(_eatButtonHoldTime,0f,_eatDuration);
+//        for (int aib=0; aib <7; aib++)
+//        {
           yield return null;
-        }
+//        }
+        abcd = _eatButtonHoldTime;
       }
-      _moveScript.SpeedBoost();
+      if(abcd > _eatDuration)
+      {
+        Debug.Log("made it to boost");
+        _moveScript.SpeedBoost();
+        _treats-=1;
+        UpdateTexts();
+      }
+      Debug.Log("diff is " + (abcd -_eatDuration)+", abcd is " + abcd +", eatbuttonhold is " + _eatButtonHoldTime);
     }
 
 
@@ -98,12 +112,18 @@ public class PlayerScript : MonoBehaviour
       while(_isFire1ButtonHeld)
       {
         _buttonHoldTime += Time.deltaTime;
-        _slider.value =Mathf.Clamp(_buttonHoldTime,0f,3f);
-        for (int i = 0; i <5; i++)
-        {
+        _slider.value =Mathf.Clamp(_buttonHoldTime,0f,_throwDuration);
+//       for (int i = 0; i <5; i++)
+//        {
           yield return null;
-        }
+//        }
+
       }
+
+        Debug.Log("made it to throw");
+        //toy script for instantiating based on name from list, and throwing
+        _toys-=1;
+        UpdateTexts();
     }
 
     public void ActionThrow()
@@ -116,11 +136,6 @@ public class PlayerScript : MonoBehaviour
           _buttonHoldTime = 0f;
           _throw.SetActive(true);
           StartCoroutine(ThrowingToys());
-        }
-        if(_buttonHoldTime < 3f)
-        {
-          _buttonHoldTime += Time.deltaTime;
-          Debug.Log("time is " + _buttonHoldTime);
         }
       }
       if(Input.GetButtonUp("Fire1"))

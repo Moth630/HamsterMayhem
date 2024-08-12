@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterController))]
 
@@ -14,10 +15,16 @@ public class PlayerMove : MonoBehaviour
   private float _currSpeed;
   [SerializeField] float _rotSpeed = 15.0f;
 
-  [SerializeField] float _jumpSpeed = 15.0f;
+  [SerializeField] float _jumpSpeed = 25.0f;
   [SerializeField] float _gravity = -9.8f;
   [SerializeField] float _terminalVelocity = -20.0f;
   [SerializeField] float _minFall = -1.5f;
+
+  [SerializeField] GameObject _JumpStrength;
+  [SerializeField] float _chargeDuration;
+  [SerializeField] float _maxDuration =2f;
+  bool _isJumpButtonHeld = false;
+
 
   float _vertSpeed;
   float _groundCheckDistance;
@@ -37,6 +44,9 @@ public class PlayerMove : MonoBehaviour
       _groundCheckDistance =
           (_charController.height + _charController.radius) /
           _charController.height * 1.1f;
+      _JumpStrength = GameObject.Find("JumpStrength");
+      _JumpStrength.SetActive(false);
+      _JumpStrength.GetComponent<Slider>().maxValue = _maxDuration;
     }
 
     // Update is called once per frame
@@ -70,20 +80,7 @@ public class PlayerMove : MonoBehaviour
   //      Debug.Log("hit distance is " + hit.distance + ", ground check is " + _groundCheckDistance);
       }
     if (hitGround){
-        if (Input.GetButtonDown("Jump"))
-        {
-            _vertSpeed = _jumpSpeed;
-  //          Debug.Log("jumping");
-  //          Debug.Log("groundcheck is " + _groundCheckDistance);
-          }
-        else
-        {
-            _vertSpeed = _minFall;
-  //          Debug.Log("falling");
-  //          Debug.Log("groundcheck is " + _groundCheckDistance);
-
-    //        _animator.SetBool("Jumping", false);
-        }
+      ActionJump();
       }
 
     else
@@ -116,13 +113,51 @@ public class PlayerMove : MonoBehaviour
       _contact = hit;
   }
 
+  private void ActionJump()
+  {
+    if(Input.GetButtonDown("Jump"))
+    {
+      if(!_isJumpButtonHeld)//checks to see if starting new jump
+      {
+        _isJumpButtonHeld = true;
+        _chargeDuration= 0f;
+        _JumpStrength.SetActive(true);
+        StartCoroutine(Jumping());
+      }
+    }
+    else if (Input.GetButtonUp("Jump"))
+    {
+      _isJumpButtonHeld=false;
+      _vertSpeed = _jumpSpeed * (_chargeDuration / _maxDuration);
+      _JumpStrength.SetActive(false);
+    }
+    else
+    {
+      _vertSpeed = _minFall;
+    }
+  }
+
+  public IEnumerator Jumping()
+  {
+    float abcd = 0f;
+    while(_isJumpButtonHeld)
+    {
+      abcd += Time.deltaTime * 2;
+      _JumpStrength.GetComponent<Slider>().value
+        = Mathf.Clamp(abcd, 0f, _maxDuration);
+      _chargeDuration = Mathf.Clamp(abcd, _maxDuration *0.4f, _maxDuration);
+      yield return null;
+    }
+  }
   public void SpeedBoost()
   {
+    Debug.Log("Speedboost");
     StartCoroutine(Boosting());
   }
 
   public IEnumerator Boosting()
   {
+    Debug.Log("boosting!");
     _currSpeed = _moveSpeed * 2;
     yield return new WaitForSeconds(_runTime);
     _currSpeed = _moveSpeed;

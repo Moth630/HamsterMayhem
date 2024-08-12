@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextScene: 101
-  _gamePlay: InCage
+  _gamePlay: FirstRoom
 --- !u!1 &165750955
 GameObject:
   m_ObjectHideFlags: 0

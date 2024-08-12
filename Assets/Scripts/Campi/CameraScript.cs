@@ -9,6 +9,7 @@ public class CameraScript : MonoBehaviour
   [SerializeField] float _rotSpeed = 1.5f;
 
   float _rotY;
+  float _rotX;
   Vector3 _offset;
 
 
@@ -26,14 +27,13 @@ public class CameraScript : MonoBehaviour
   {
       // Increment rotation values based on input
       float horInput = Input.GetAxis("Horizontal");
+      float vertInput = Input.GetAxis("Vertical");
 
-      // Rotate based on the keyboard if pressed
-
-          _rotY += Input.GetAxis("Mouse X") * _rotSpeed * 3;
-
+      _rotY += Input.GetAxis("Mouse X") * _rotSpeed * 3;
+      _rotX += Input.GetAxis("Mouse Y") * _rotSpeed * 3;
       // Maintain starting offset, shifted according to the
       // camera's rotation
-      Quaternion rotation = Quaternion.Euler(0, _rotY, 0);
+      Quaternion rotation = Quaternion.Euler(Mathf.Clamp(_rotX, -30f, 45f), _rotY, 0);
 
       // Multiplying a position vector with a quaternion results in
       // a position that is shifted over according to that rotation
