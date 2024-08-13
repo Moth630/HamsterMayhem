@@ -34,7 +34,7 @@ public class SpawnRandomPrefabs : MonoBehaviour
              Random.Range(-spawnRange, spawnRange),
              0
          );
-         Debug.Log("test tes");
+        // Debug.Log("test tes");
 
          GameObject selectedPrefab = prefab[random.Next(prefab.Length)];
          GameObject spawnedObject = Instantiate(selectedPrefab, spawnPosition, Quaternion.identity);

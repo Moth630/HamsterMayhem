@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+[RequireComponent(typeof(SphereCollider))]
 public abstract class InteractableBaseClass : MonoBehaviour
 {
 //base class for interactable environment items
 
 //public float _interactionDistance = 5f; //dont need, instead of calculating distance, just make a sphere collider
+public GameObject _prefab;
 public bool _interactable;
 public bool _poppedUp;
 public Canvas _popupDisplay;
@@ -16,7 +17,50 @@ public Camera mainCamera;
 public PlayerScript _playerScript;
 
 
+public virtual void BasicSetup()
+{
+  this.GetComponent<SphereCollider>().isTrigger = true;
+  MeshFilter meshFilter = GetComponent<MeshFilter>();
+
+         if (meshFilter != null)
+         {
+             // Get the bounds of the Mesh
+             Bounds bounds = meshFilter.sharedMesh.bounds;
+
+             // Calculate the radius for the SphereCollider
+             float radius = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z) / 2 + 5f;
+             this.GetComponent<SphereCollider>().radius = radius;
+           }
+  _popupDisplay = this.GetComponentInChildren<Canvas>();
+  mainCamera = Camera.main;
+  Debug.Log("1" +this.name);
+  _interactable=false;
+  if(_popupDisplay != null)
+  {
+    Debug.Log("2" +this.name);
+    _popupText = _popupDisplay.GetComponentInChildren<TextMeshProUGUI>();
+    if(_popupText!= null)
+    {
+      Debug.Log("3" +this);
+      _popupText.gameObject.SetActive(false);
+      Debug.Log("everything working here at " +this.name);
+    }
+    else
+    {
+      Debug.Log("error with tmpro of " + this.name);
+    }
+  }
+  else
+  {
+    Debug.Log("Canvas issue with gameobject" + this.name);
+  }
+}
+public virtual string PrefabName()
+{
+    return gameObject.name; //for getting name of toys
+}
 //method for pop up text
+//just edit _popupText and it'll show it without needing to override this
 public virtual void PopUp()
 {
   if(_popupDisplay != null)
@@ -39,7 +83,6 @@ public virtual void DePopUp()
     _poppedUp = false;
   }
 }
-
 //method for see if able to start interaction because player close
 /*public virtual void AbleInteract(float _distanceNeeded, Vector3 _playerTransform)
 {
@@ -54,12 +97,22 @@ public virtual void IsInteracting()
   Debug.Log("Interactioning!");
 }
 
-public abstract void Interacted(); //finished interacting
+public virtual void Interacted()
+{
+  Debug.Log("samething");
+} //finished interacting
 //method for not interactable anymore for things that can be broken/runout
 
-public abstract void Broken();
+public virtual void Broken()
+{
+  Debug.Log("doesn't always need to be implemented");
+}
 //method for transitioning between
 
+/*triggerenter makes thing interactable
+and also calls interactioning
+and set _playerScript so it's usable
+*/
 public virtual void OnTriggerEnter(Collider other)
 {
   if(other.gameObject.tag == "Player")
@@ -69,6 +122,7 @@ public virtual void OnTriggerEnter(Collider other)
     _playerScript = other.GetComponent<PlayerScript>();
     if (_playerScript != null)
     {
+      IsInteracting();
       Debug.Log("playerscript is found");
     }
     else
@@ -77,7 +131,7 @@ public virtual void OnTriggerEnter(Collider other)
     }
   }
 }
-public virtual IEnumerator PopUpFaceCamera()
+public virtual IEnumerator PopUpFaceCamera()//make text face camera
 {
   while(_interactable)
   {
@@ -91,7 +145,7 @@ public virtual IEnumerator PopUpFaceCamera()
    {
      Debug.Log("camera not captured");
    }
-   yield return null;
+   yield return new WaitForSeconds(0.1f);
   }
 }
 
@@ -104,3 +158,6 @@ public virtual void OnTriggerExit(Collider other)
     }
   }
 }
+/*ability to be interacted with is checked with Trigger
+actual interaction with pressing E is checked with update
+*/

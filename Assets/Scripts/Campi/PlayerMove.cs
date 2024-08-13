@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(AudioSource))]
 
 
 public class PlayerMove : MonoBehaviour
@@ -16,6 +17,9 @@ public class PlayerMove : MonoBehaviour
   [SerializeField] float _rotSpeed = 15.0f;
 
   [SerializeField] float _jumpSpeed = 25.0f;
+  [SerializeField] AudioClip _jumpSound;
+  [SerializeField] AudioSource _campiSource;
+  private float _currJump;
   [SerializeField] float _gravity = -9.8f;
   [SerializeField] float _terminalVelocity = -20.0f;
   [SerializeField] float _minFall = -1.5f;
@@ -24,6 +28,8 @@ public class PlayerMove : MonoBehaviour
   [SerializeField] float _chargeDuration;
   [SerializeField] float _maxDuration =2f;
   bool _isJumpButtonHeld = false;
+
+  [SerializeField] GameObject _BoostShower;
 
 
   float _vertSpeed;
@@ -39,6 +45,9 @@ public class PlayerMove : MonoBehaviour
     {
       _currSpeed = _moveSpeed;
       _vertSpeed = _minFall;
+      _currJump = _jumpSpeed;
+      _BoostShower = GameObject.Find("OnFire");
+      _BoostShower.SetActive(false);
       _charController = GetComponent<CharacterController>();
       _charController.radius = 8f;
       _groundCheckDistance =
@@ -128,7 +137,9 @@ public class PlayerMove : MonoBehaviour
     else if (Input.GetButtonUp("Jump"))
     {
       _isJumpButtonHeld=false;
-      _vertSpeed = _jumpSpeed * (_chargeDuration / _maxDuration);
+      _campiSource.clip = _jumpSound;
+      _campiSource.Play();
+      _vertSpeed = _currJump * (_chargeDuration / _maxDuration);
       _JumpStrength.SetActive(false);
     }
     else
@@ -145,7 +156,7 @@ public class PlayerMove : MonoBehaviour
       abcd += Time.deltaTime * 2;
       _JumpStrength.GetComponent<Slider>().value
         = Mathf.Clamp(abcd, 0f, _maxDuration);
-      _chargeDuration = Mathf.Clamp(abcd, _maxDuration *0.4f, _maxDuration);
+      _chargeDuration = Mathf.Clamp(abcd, _maxDuration *0.7f, _maxDuration);
       yield return null;
     }
   }
@@ -159,7 +170,11 @@ public class PlayerMove : MonoBehaviour
   {
     Debug.Log("boosting!");
     _currSpeed = _moveSpeed * 2;
+    _currJump = _jumpSpeed *2;
+    _BoostShower.SetActive(true);
     yield return new WaitForSeconds(_runTime);
     _currSpeed = _moveSpeed;
+    _currJump = _jumpSpeed;
+    _BoostShower.SetActive(false);
   }
 }

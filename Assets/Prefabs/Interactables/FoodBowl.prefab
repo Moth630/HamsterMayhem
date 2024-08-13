@@ -134,8 +134,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.57, y: 0.12, z: 2.36}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2.04, y: 2.04, z: 2.04}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5255161959995457438}
   m_Father: {fileID: 0}
@@ -152,11 +152,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bfefcb79f3fc413ba43b891246c66f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _prefab: {fileID: 0}
   _interactable: 1
+  _poppedUp: 0
   _popupDisplay: {fileID: 8564919415757748703}
   _popupText: {fileID: 0}
-  contact: {fileID: 0}
   mainCamera: {fileID: 0}
+  _playerScript: {fileID: 0}
   _StarterArea: 1
   _treats: 5
 --- !u!135 &4007019006359555533
@@ -178,7 +180,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 6.29
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6970748468838786091
 PrefabInstance:

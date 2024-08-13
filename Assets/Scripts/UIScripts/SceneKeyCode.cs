@@ -8,13 +8,19 @@ public class SceneKeyCode : MonoBehaviour //when press button go to next screen
 {
   [SerializeField] KeyCode _nextScene = KeyCode.E;
   [SerializeField] string _gamePlay;
+  [SerializeField] SceneLoader _script;
+
+    void Start()
+    {
+      _script = GameObject.Find("EventSystem").GetComponent<SceneLoader>();
+    }
 
     // Update is called once per frame
     void Update()
     {
       if(Input.GetKeyDown(_nextScene))
       {
-        SceneManager.LoadScene(_gamePlay);
+        _script.LoadScene();
       }
     }
 }

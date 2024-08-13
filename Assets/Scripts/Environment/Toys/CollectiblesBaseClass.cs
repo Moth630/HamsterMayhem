@@ -7,16 +7,18 @@ public abstract class CollectiblesBaseClass : MonoBehaviour
   public GameObject _prefab;
   public string _name;
 
-  public virtual string Name()
+  public virtual string PrefabName()
   {
-    if(_name != null)
-      return _name;
-    else
-      return null;
+      return gameObject.name;
+
   }
-  public virtual void Throw(float _strength, Vector3 position, Quaternion rotation)
+
+  public virtual void OnTriggerEnter(Collider other)
   {
-    Debug.Log("");
+    if(other.gameObject.tag == "Player")
+    {
+
+    }
   }
 //  public virtual void Gravity()
 //  {
