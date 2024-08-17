@@ -24,7 +24,7 @@ public class MapSpawner : MonoBehaviour
                 // Generate a random position within the area
                 spawnPosition = new Vector3(
                     Random.Range(-areaSize.x / 2, areaSize.x / 2),
-                    Random.Range(-areaSize.y/2, areaSize.y/2), // Assuming a flat map at y = 0
+                    Random.Range(-areaSize.y/2, areaSize.y/2),
                     Random.Range(-areaSize.z / 2, areaSize.z / 2)
                 );
 
